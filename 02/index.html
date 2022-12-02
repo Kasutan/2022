@@ -11,8 +11,14 @@
 <body>
 	<main>
 		<h1>🎄 Advent of Code 🎄</h1>
-		<div class="content" id="content">
-		</div>
+		<form class="content" id="content">
+			<p><label for="file">Charger un fichier input : </label></p>
+			<input id="file" type="file" onchange="readFile(this)">
+			<p><label for="reponse">Résultat : </label><br><input type="text" id="reponse" name="reponse"/>
+			</p>
+			<p><label for="reponse-2">Résultat partie 2: </label><br><input type="text" id="reponse-2" name="reponse"/>
+			</p>
+		</form>
 	</main>
 	<script src="index.js"></script>
 </body>
