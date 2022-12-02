@@ -24,6 +24,17 @@ function calculerScore(texte) {
 	console.log('total',total)
 	document.getElementById('reponse').value=total;
 
+	/*2e partie*/
+	let scoresManches2=manches.map(scoreManche2)
+	console.log('scoreManches2',scoresManches2);
+
+	let total2=scoresManches2.reduce(function (accumVariable, curValue) {
+		return accumVariable + parseInt(curValue)
+		}, 0);
+	
+	console.log('total2',total2)
+	document.getElementById('reponse-2').value=total2;
+
 }
 
 function scoreManche(consigne) {
@@ -79,6 +90,58 @@ function score(elfe,moi) {
 	}
 }
 
+
+function scoreManche2(consigne) {
+	let consigneA=consigne.split(' ');
+	let elfe=consigneA[0];
+	let objectif=consigneA[1];
+
+	let nomsFormes={
+		'A' : 'pierre', 
+		'B' : 'papier', 
+		'C' : 'ciseaux', 
+	}
+	
+	let scoreSelonObjectif = {
+		'X' : 0, 
+		'Y' : 3, 
+		'Z' : 6, 
+	}
+
+	let valeursFormes={
+		'pierre' : 1, //rock
+		'papier' : 2, //paper
+		'ciseaux' : 3, //scissors
+	}
+
+	let pourPerdre = {
+		'papier' : 'pierre',
+		'ciseaux' : 'papier',
+		'pierre' : 'ciseaux'
+	}
+	let pourGagner = {
+		'papier' : 'ciseaux',
+		'ciseaux' : 'pierre',
+		'pierre' : 'papier'
+	}
+
+	return scoreSelonObjectif[objectif]+gainParForme(nomsFormes[elfe],objectif,valeursFormes,pourPerdre,pourGagner);
+}
+
+function gainParForme(elfe,objectif,valeursFormes,pourPerdre,pourGagner) {
+	if(objectif==='Y') {
+		//on cherche le match null
+		return valeursFormes[elfe];
+	}
+	if(objectif==='X') {
+		//on cherche à perdre
+		return valeursFormes[pourPerdre[elfe]];
+	}
+	if(objectif==='Z') {
+		//on cherche à gagner
+		return valeursFormes[pourGagner[elfe]];
+	}
+}
 
 
 
