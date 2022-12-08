@@ -1,0 +1,22 @@
+body {
+	font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+	padding:2vw;
+}
+h1 {
+	text-align: center;
+}
+.content {
+	background-color: #7cb9a2;
+	min-height:50vh;
+	padding:4rem;
+}
+form {
+	margin:auto;
+	width:30rem;
+}
+input, textarea {
+	width:100%;
+}
+.button {
+	padding:10px;
+}
