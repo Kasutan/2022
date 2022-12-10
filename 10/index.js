@@ -29,11 +29,9 @@ function afficheTotal(texte) {
 	document.getElementById('reponse').value=total;
 
 	//2e partie de l'exercice
-	/*
-	let total2=tailleSuppr();
-	console.log('total2',total2)
-	document.getElementById('reponse-2').value=total2;
-*/
+	let html=dessine();
+	console.log(html);
+	document.getElementById('reponse-2').innerHTML=html;
 }
 
 
@@ -66,4 +64,26 @@ function calculeTotal(texte) {
 
 	
 	return total;
+}
+
+function dessine() {
+	let html='';
+	let finsLignes=[40,80,120,160,200];
+	let c=0;
+
+	for(let i=0;i<historique.length;i++) {
+		if(finsLignes.indexOf(i) != -1) {
+			html+='<br>';
+			c=0;
+		}
+		let x=parseInt(historique[i+1]);
+		if(c>= (x-1) && c<=(x+1)) {
+			html+='#';
+		} else {
+			html+='.';
+		}
+		c++
+
+	}
+	return html;
 }
