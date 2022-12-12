@@ -1,8 +1,5 @@
 let H = {"l":0,"c":0};
-let T=[];
-for (let n=1;n<=9;n++) {
-	T[n]={};
-}
+let T = {"l":0,"c":0};
 let visited = [];
 
 
@@ -43,9 +40,7 @@ function afficheTotal(texte) {
 
 function calculeTotal(texte) {
 	H = {"l":0,"c":0};
-	for (let n=1;n<=9;n++) {
-		T[n]={"l":0,"c":0};
-	}
+	T = {"l":0,"c":0};
 	visited = ["l0c0"];
 
 	
@@ -57,20 +52,16 @@ function calculeTotal(texte) {
 		let n=parseInt(move.split(" ")[1]);
 		for (let i=1;i<=n;i++) {
 			bougeH(direction);
-			bougeTapresN(T[1],H);
-			for (let n=2;n<=9;n++) {
-				bougeTapresN(T[n],T[n-1]);
-			}
-			visited.push(positionT(9));
+			bougeT();
+			visited.push(positionT());
 			console.log('position H',positionH());
-			console.log('position T9',positionT(9));
+			console.log('position T',positionT());
 		}
 		
 	})
 
 	console.log('position finale H',H);
-	console.log('position finale tous noeuds',T);
-	console.log('position finale T9',T[9]);
+	console.log('position finale T',T);
 	
 	console.log('visited',visited);
 	let uniqueVisited = [...new Set( visited)];
@@ -83,8 +74,8 @@ function positionH() {
 	return "l"+H.l+"c"+H.c;
 }
 
-function positionT(i) {
-	return "l"+T[i].l+"c"+T[i].c;
+function positionT() {
+	return "l"+T.l+"c"+T.c;
 }
 
 function bougeH(direction) {
@@ -113,23 +104,23 @@ function bougeH(direction) {
 	}*/
 }
 
-function bougeTapresN(T,N) {
-	let dc=N.c - T.c;
-	let dl=N.l - T.l;
+function bougeT() {
+	let dc=H.c - T.c;
+	let dl=H.l - T.l;
 	if(dl===0) {
 		//sur la même ligne
 		if(dc>1) {
-			T.c=N.c-1;
+			T.c=H.c-1;
 		} else if (dc < -1) {
-			T.c=N.c +1;
+			T.c=H.c +1;
 		}
 	}
 	else if(dc===0) {
 		//sur la même colonne
 		if(dl>1) {
-			T.l=N.l-1;
+			T.l=H.l-1;
 		} else if (dl < -1) {
-			T.l=N.l+1;
+			T.l=H.l+1;
 		}
 	} else if(Math.abs(dc) <= 1 && Math.abs(dl) <=1) {
 		//Contact diagonal, on ne bouge pas T
