@@ -1,7 +1,7 @@
-let visibles = [];
-let lignes=[];
-let colonnes=[];
-let taille=0;
+let H = {"l":0,"c":0};
+let T = {"l":0,"c":0};
+let visited = [];
+
 
 function readFile(input) {
 	let f = input.files[0];
@@ -17,7 +17,7 @@ function readFile(input) {
 }
 
 /*Exemple*/
-let inputExemple="30373!25512!65332!33549!35390";
+let inputExemple="R 4!U 4!L 3!D 1!R 4!D 1!L 5!R 2";
 
 afficheTotal(inputExemple);
 
@@ -39,72 +39,103 @@ function afficheTotal(texte) {
 
 
 function calculeTotal(texte) {
+	H = {"l":0,"c":0};
+	T = {"l":0,"c":0};
+	visited = ["l0c0"];
 
-	lignes=[];
-	colonnes=[];
-	visibles = [];
-	let total=0;
 	
-	let foret=texte.split("!");
-	taille=foret.length;
+	let moves=texte.split("!");
 
-	for(let i=0; i<taille; i++) {
-		colonnes.push([]);
-	}
-
-	foret.forEach((string) => {
-		let ligne=string.split("");
-		lignes.push(ligne);
-		ligne.forEach((arbre,index) => {
-			colonnes[index].push(arbre);
-		})
+	moves.forEach((move) => {
+		console.log('==========move',move);
+		let direction=move.split(" ")[0];
+		let n=parseInt(move.split(" ")[1]);
+		for (let i=1;i<=n;i++) {
+			bougeH(direction);
+			bougeT();
+			visited.push(positionT());
+			console.log('position H',positionH());
+			console.log('position T',positionT());
+		}
+		
 	})
-	console.log('lignes',lignes);
-	console.log('colonnes',colonnes);
 
-	remplitVisibles(lignes,true,1);
-	remplitVisibles(lignes,true,-1);
-	remplitVisibles(colonnes,false,1);
-	remplitVisibles(colonnes,false,-1);
+	console.log('position finale H',H);
+	console.log('position finale T',T);
+	
+	console.log('visited',visited);
+	let uniqueVisited = [...new Set( visited)];
+	console.log('unique',uniqueVisited);
 
-
-	console.log('visibles',visibles);
-	let uniqueVisibles = [...new Set( visibles)];
-	console.log('unique',uniqueVisibles);
-
-	return uniqueVisibles.length;
+	return uniqueVisited.length;
 }
 
-function ajouteArbre(l,c,h,parLigne,sens) {
+function positionH() {
+	return "l"+H.l+"c"+H.c;
+}
+
+function positionT() {
+	return "l"+T.l+"c"+T.c;
+}
+
+function bougeH(direction) {
 	
-	if(parLigne) {
-		if(sens===-1) {
-			c=taille-parseInt(c)-1;
+	if(direction==="R") {
+		H.c++;
+	}
+	if(direction==="L") {
+		H.c--;
+	}
+	if(direction==="U") {
+		H.l++;
+	}
+	if(direction==="D") {
+		H.l--;
+	}
+	//vérif après mouvement
+	//Autoriser à sortir de la grille
+	/*if(H.c < 0) {
+		console.log('colonne H négative !');
+		H.c=0;
+	}
+	if(H.l < 0) {
+		console.log('ligne H négative !');
+		H.l=0;
+	}*/
+}
+
+function bougeT() {
+	let dc=H.c - T.c;
+	let dl=H.l - T.l;
+	if(dl===0) {
+		//sur la même ligne
+		if(dc>1) {
+			T.c=H.c-1;
+		} else if (dc < -1) {
+			T.c=H.c +1;
 		}
-		visibles.push('l'+l+'c'+c+'h'+h);
+	}
+	else if(dc===0) {
+		//sur la même colonne
+		if(dl>1) {
+			T.l=H.l-1;
+		} else if (dl < -1) {
+			T.l=H.l+1;
+		}
+	} else if(Math.abs(dc) <= 1 && Math.abs(dl) <=1) {
+		//Contact diagonal, on ne bouge pas T
 	} else {
-		if(sens===-1) {
-			c=taille-parseInt(c)-1;
+		//Besoin d'un mouvement en diagonale d'un cran en direction de H
+		if(dc > 0){
+			T.c++;
+		} else {
+			T.c--;
 		}
-		visibles.push('l'+c+'c'+l+'h'+h);
+		if(dl > 0){
+			T.l++;
+		} else {
+			T.l--;
+		}
 	}
 }
 
-
-
-function remplitVisibles(lignes,parLigne,sens) {
-	let maxlocal=0;
-	lignes.forEach((ligne,l)=>{
-		maxlocal=0;
-		if(sens===-1) {
-			ligne=ligne.reverse();
-		}
-
-		ligne.forEach((h,c)=>{
-			if(l===0 || c===0 || h>maxlocal) {
-				ajouteArbre(l,c,h,parLigne,sens);
-				maxlocal=h;
-			}
-		})
-	})
-}
