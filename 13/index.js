@@ -67,10 +67,14 @@ function testePaires(texte) {
 }
 
 function teste(gaucheS,droiteS) {
+	console.log('====test interne '+gaucheS+' vs '+droiteS);
+	console.log('gaucheS',gaucheS);
+	console.log('droiteS',droiteS);
+
 	let resultat=true;
 	let gauche="";
 	let droite="";
-	if(!Array.isArray(gaucheS)) {
+	if(!Array.isArray(gaucheS) && !Number.isInteger(gaucheS)) {
 		gauche=parseInt(gaucheS);
 		if(!Number.isInteger(gauche)) {
 			gauche=JSON.parse(gaucheS);
@@ -79,7 +83,7 @@ function teste(gaucheS,droiteS) {
 	} else {
 		gauche=gaucheS;
 	}
-	if(!Array.isArray(droiteS)) {
+	if(!Array.isArray(droiteS) && !Number.isInteger(droiteS)) {
 		droite=parseInt(droiteS);
 		if(!Number.isInteger(droite)) {
 			droite=JSON.parse(droiteS);
@@ -88,38 +92,34 @@ function teste(gaucheS,droiteS) {
 		droite=droiteS;
 	}
 	
-	console.log('====test interne '+gauche+' vs '+droite);
-	console.log('gauche',gauche);
-	console.log('droite',droite);
-	if(!Array.isArray(gauche) ) {
-		if(Array.isArray(droite)) {
-			gauche=Array.of(gauche);
-			resultat=teste(gauche,droite);
+	
+
+	if(Number.isInteger(gauche) && Number.isInteger(droite)) {
+		resultat= gauche <= droite;
+	} else if (Array.isArray(gauche) && Array.isArray(droite)) {
+		if(gauche.length===0) {
+			resultat=true;
+		} else if(droite.length===0) {
+			resultat=false;
+		} else if(droite.length < gauche.length) {
+			resultat=false;
 		} else {
-			resultat= gauche <= droite;
+			gauche.forEach((elem,index) => {
+				if(resultat) {
+					//on ne continue que si les tests précédents sont true
+					resultat=teste(elem,droite[index]);
+				}
+			})
 		}
-	} else {
-		if(!Array.isArray(droite)) {
-			//resultat=gauche[0] <= droite;
-			droite=Array.of(droite);
-			resultat=teste(gauche,droite);
-		} else {
-			//on a 2 tableaux
-			if(gauche.length > droite.length) {
-				resultat=false;
-			} else if(gauche.length===0) {
-				resultat=true;
-			} else {
-				gauche.forEach((elem,index) => {
-					if(resultat) {
-						//on ne continue que si les tests précédents sont true
-						resultat=teste(elem,droite[index]);
-					}
-				})
-			}
-			
-		}
+	} else if(!Array.isArray(gauche) ) {
+		gauche=Array.of(gauche);
+		resultat=teste(gauche,droite);
+	} else if(!Array.isArray(droite)) {
+		resultat=gauche[0] <= droite;
+		/*droite=Array.of(droite);
+		resultat=teste(gauche,droite);*/
 	}
+	
 
 	return resultat;
 }
