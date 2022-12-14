@@ -33,11 +33,7 @@ function afficheTotal(texte) {
 	let rochesU=[... new Set(roches)];
 	rochesU.sort();
 	console.log('rochesU',rochesU);
-	//Exo 2 : le vrai fond est deux crans plus bas que la dernière ligne de rochers
-	fond+=2;
 	console.log('fond',fond);
-
-
 
 	total=calculeTotal(texte);
 
@@ -101,25 +97,25 @@ function calculeTotal() {
 	let suite=true;
 	let nb=0;
 	while(suite) {
-		nb++;
-		console.log("==========calcule position grain",nb);
 		let positionGrain=calculePositionGrain();
-		if(positionGrain==="source") {
+		if(positionGrain==="abysse") {
 			suite=false;
+		} else {
+			nb++;
 		}
 	}
 
 	let grainsU=[... new Set(grains)];
 	console.log('grainsU',grainsU);
 	console.log('nb',nb);
-	console.log('fond',fond);
 	return grains.length;
 }
 
 function calculePositionGrain(){
 	let position="500,0";
-	while(position !=="stop" && position!=="source") {
+	while(position !=="stop" && position !=="abysse") {
 		position=descend(position);
+		console.log('position',position);
 	}
 
 	return position;
@@ -131,10 +127,8 @@ function descend(position) {
 	let dessous=x+','+(y+1);
 	let droite=(x+1)+','+(y+1);
 	let gauche=(x-1)+','+(y+1);
-	if(y===fond - 1) {
-		grains.push(position);
-		console.log("fond",position);
-		position="stop";
+	if(y===fond) {
+		position="abysse";
 	} else if(libre(dessous)) {
 		position=dessous;
 	} else if(libre(gauche)) {
@@ -143,12 +137,7 @@ function descend(position) {
 		position=droite;
 	} else {
 		grains.push(position);
-		console.log(position);
-		if(position==="500,0") {
-			position="source";
-		} else {
-			position="stop";
-		}
+		position="stop";
 	}
 	return position;
 }
